@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#ffffff" name="theme-color"/>
+<meta content="Dynamic Cart Lab: a student physics experiment studying crumple-zone design, friction, impact velocity and stopping forces." name="description"/>
+<title>Dynamic Cart Lab | SPH4UE</title>
+<style>500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    :root{--ink:#10221d;--deep:#0d1d19;--deep2:#152e27;--paper:#f6f5ef;--white:#fffefa;--lime:#c5f272;--mid:#5c6e61;--border:#d9dfd5;--soft:#e7eddf;--orange:#f3a977;--max:1240px}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:94px}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans','Inter',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--lime);color:var(--ink)}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;cursor:pointer}
+    img{display:block;max-width:100%}
+    .wrap{width:min(var(--max),calc(100% - 84px));margin:auto}
+    .mono{font-family:'Space Grotesk','Inter',Arial,sans-serif}
+    .eyebrow{font:700 12px/1.3 'Space Grotesk',Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+    .tag{display:inline-flex;align-items:center;gap:10px;font:600 12px/1.2 'Space Grotesk',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+    .tag::before{content:"";width:7px;height:7px;border-radius:100%;background:currentColor}
+    .section-heading{font:700 clamp(32px,3.9vw,52px)/1.12 'Space Grotesk','Inter',Arial,sans-serif;letter-spacing:-.045em;margin:12px 0 22px}
+    .lede{font-size:17px;line-height:1.74;color:#536259;max-width:590px}
+    .button{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:52px;padding:0 22px;border-radius:100px;font:700 13px/1 'Space Grotesk',Arial,sans-serif;letter-spacing:.015em;border:1px solid transparent;transition:transform .2s,background .2s,color .2s,border-color .2s;white-space:nowrap}
+    .button:hover{transform:translateY(-2px)}
+    .button:focus-visible,.nav-links a:focus-visible,.trial-button:focus-visible,.menu-button:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+    .button svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .button--accent{background:var(--lime);color:var(--deep)}
+    .button--dark{background:var(--deep);color:var(--white)}
+    .button--outline{background:transparent;color:var(--white);border-color:#577066}
+    .button--outline:hover{border-color:var(--lime)}
+    .button--paper{background:var(--white);color:var(--deep)}
+    .header{background:var(--deep);border-bottom:1px solid #284039;position:relative;z-index:25}
+    .header-inner{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:13px;color:var(--white);flex-shrink:0}
+    .brand-mark{width:42px;height:42px;border-radius:12px;background:var(--lime);color:var(--ink);display:flex;align-items:center;justify-content:center;font:700 17px 'Space Grotesk',Arial,sans-serif;letter-spacing:-.1em}
+    .brand-name{font:700 14px/1.05 'Space Grotesk',Arial,sans-serif;letter-spacing:-.035em}
+    .brand-name span{display:block;color:#aec3b2;font:500 10px/1.45 'Space Grotesk',Arial,sans-serif;letter-spacing:.14em;margin-top:3px}
+    .nav-links{display:flex;align-items:center;gap:31px;margin-left:auto}
+    .nav-links a{font:600 12px 'Space Grotesk',Arial,sans-serif;color:#d1ded4;transition:color .2s}
+    .nav-links a:hover{color:var(--lime)}
+    .header .button{min-height:43px;padding:0 17px;font-size:12px}
+    .menu-button{display:none;border:1px solid #486057;background:transparent;border-radius:9px;padding:9px;color:white}
+    .menu-button svg{display:block;width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none}
+    .hero{position:relative;background:var(--deep);color:var(--white);overflow:hidden;isolation:isolate}
+    .hero:before{content:"";position:absolute;right:-23%;top:-100px;width:850px;height:800px;opacity:.18;background:none;pointer-events:none;z-index:-1}
+    .hero-grid{display:grid;grid-template-columns:1.03fr .97fr;gap:52px;align-items:center;padding:68px 0 80px}
+    .hero-copy{padding-bottom:8px}
+    .hero .tag{color:var(--lime)}
+    .hero h1{font:700 clamp(38px,4.7vw,62px)/1.13 'Space Grotesk','Inter',Arial,sans-serif;letter-spacing:-.055em;margin:19px 0 24px;text-transform:none}
+    .hero h1 em{color:var(--lime);font-style:normal;letter-spacing:-.09em}
+    .hero-description{max-width:455px;color:#bfcfc4;font-size:17px;line-height:1.75;margin:0 0 30px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .hero-visual{position:relative;align-self:stretch;display:flex;align-items:center;min-height:505px}
+    .hero-photo{position:relative;width:100%;height:485px;border:8px solid #f2f2e7;border-radius:10px 10px 90px 10px;overflow:hidden;transform:rotate(1.3deg);box-shadow:0 28px 70px #040b077a;background:#343c38}
+    .hero-photo:after{content:"";position:absolute;inset:48% 0 0;background:none;height:100%;object-fit:cover;object-position:center}
+    .photo-caption{position:absolute;bottom:32px;left:29px;z-index:2;color:white}
+    .photo-caption b{display:block;font:700 27px 'Space Grotesk',Arial,sans-serif;letter-spacing:-.05em}
+    .photo-caption span{font:500 11px 'Space Grotesk',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#cbded5}
+    .stats{position:relative;z-index:2;background:var(--lime)}
+    .stats-inner{display:grid;grid-template-columns:1.15fr 1fr 1fr 1fr}
+    .stat{padding:31px 27px 30px;border-left:1px solid #9ec35d}
+    .stat:first-child{padding-left:0;border-left:0}
+    .stat-number{font:700 clamp(31px,3.1vw,46px)/1.1 'Space Grotesk',Arial,sans-serif;letter-spacing:-.075em}
+    .stat-caption{font:600 11px/1.6 'Space Grotesk',Arial,sans-serif;letter-spacing:.045em;text-transform:uppercase;margin-top:6px;color:#344a2c}
+    .about{padding:133px 0 121px}
+    .about-top{display:grid;grid-template-columns:.85fr 1.15fr;gap:76px;align-items:start;margin-bottom:55px}
+    .about-title{max-width:510px}
+    .about-intro{padding-top:38px}
+    .about-intro p{font-size:17px;line-height:1.85;color:#4e6056;margin:0 0 18px}
+    .about-layout{display:grid;grid-template-columns:1.07fr .93fr;gap:25px}
+    .sketch-card{position:relative;background:#e4e5d7;border-radius:17px;padding:16px;min-height:560px;overflow:hidden}
+    .sketch-card img{width:100%;height:100%;max-height:530px;object-fit:contain;border-radius:8px;background:#d4d6cc}
+    .sketch-card .corner-label{position:absolute;top:29px;left:28px;background:var(--lime);border-radius:4px;padding:10px 12px;font:700 11px 'Space Grotesk',Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 6px 24px #10221d28}
+    .materials{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:16px}
+    .material{background:#fffef9;border:1px solid #e1e3d9;border-radius:14px;padding:27px 23px;display:flex;flex-direction:column;justify-content:space-between;min-height:244px;transition:transform .22s}
+    .material:hover{transform:translateY(-4px)}
+    .material-index{display:flex;justify-content:space-between;align-items:center;font:700 12px 'Space Grotesk',Arial,sans-serif;color:#6e8472;letter-spacing:.09em}
+    .material-icon{width:34px;height:34px;display:grid;place-items:center;background:#e8f4da;border-radius:10px;font-size:20px}
+    .material h3{font:700 22px/1.16 'Space Grotesk',Arial,sans-serif;letter-spacing:-.05em;margin:14px 0 8px}
+    .material p{font-size:13px;line-height:1.63;color:#69756d;margin:0}
+    .explain{background:var(--deep);color:var(--white);padding:116px 0 111px;position:relative;overflow:hidden}
+    .explain:after{content:"";position:absolute;width:570px;height:570px;border-radius:50%;border:1px solid #426b52;right:-380px;bottom:-350px;box-shadow:0 0 0 70px #1a382711,0 0 0 140px #1a382729;pointer-events:none}
+    .explain-grid{display:grid;grid-template-columns:.96fr 1.04fr;gap:105px;align-items:center}
+    .explain .tag{color:var(--lime)}
+    .explain .section-heading{max-width:560px}
+    .explain .lede{color:#acc0b1;margin-bottom:30px}
+    .principle-list{margin:35px 0 0;padding:0;list-style:none}
+    .principle-list li{display:flex;gap:15px;align-items:start;border-top:1px solid #375046;padding:17px 0;color:#b6c9bc;font-size:14px;line-height:1.6}
+    .principle-list li b{font:700 12px 'Space Grotesk',Arial,sans-serif;color:var(--lime);margin-top:2px}
+    .explain-card{background:#223d31;border-radius:18px;padding:36px;position:relative}
+    .explain-card:before{content:"";position:absolute;inset:14px;border:1px solid #4b6952;border-radius:12px;pointer-events:none}
+    .big-result{position:relative;padding:24px 12px 32px;text-align:center}
+    .big-result small{display:block;color:#b4c7b9;font:600 12px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;letter-spacing:.12em}
+    .big-result strong{display:block;color:var(--lime);font:700 clamp(58px,7vw,98px)/1.08 'Space Grotesk',Arial,sans-serif;letter-spacing:-.1em;margin:12px 0 6px}
+    .big-result p{font-size:15px;color:#c6d7cc;line-height:1.55;margin:0 auto;max-width:265px}
+    .process{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0 0}
+    .process-box{border:1px solid #63816b;border-radius:10px;padding:14px 14px;flex:1;text-align:center}
+    .process-box span{display:block;font:600 10px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;color:#b5cbb9;letter-spacing:.09em;margin-bottom:7px}
+    .process-box b{font:700 22px 'Space Grotesk',Arial,sans-serif;letter-spacing:-.045em}
+    .process-arrow{font-size:22px;color:var(--lime)}
+    .explain-note{font-size:11px;line-height:1.6;color:#b0c3b5;text-align:center;margin:20px 8px 3px}
+    .testing{padding:125px 0 112px}
+    .testing-header{display:flex;justify-content:space-between;gap:50px;align-items:end;margin-bottom:44px}
+    .testing-header .section-heading{max-width:700px;margin-bottom:0}
+    .testing-header .lede{max-width:315px;margin:0 0 3px}
+    .trial-panel{background:var(--white);border:1px solid #e0e3d9;border-radius:19px;padding:35px 37px 38px;box-shadow:0 15px 45px #10221d0c}
+    .trial-top{display:flex;justify-content:space-between;align-items:center;gap:15px;padding-bottom:25px;border-bottom:1px solid var(--border)}
+    .trial-top h3{font:700 22px 'Space Grotesk',Arial,sans-serif;letter-spacing:-.05em;margin:0}
+    .trial-buttons{display:flex;gap:7px;background:#eef1e9;border-radius:100px;padding:5px}
+    .trial-button{border:0;border-radius:100px;background:transparent;padding:11px 19px;font:700 12px 'Space Grotesk',Arial,sans-serif;color:#647469;transition:background .2s}
+    .trial-button[aria-selected="true"]{background:var(--deep);color:var(--lime);box-shadow:0 3px 8px #00000018}
+    .trial-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:51px;padding-top:35px;align-items:center}
+    .trial-metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .trial-metric{background:#f0f3ec;border-radius:10px;padding:22px 19px}
+    .trial-metric span{display:block;font:600 11px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;letter-spacing:.09em;color:#627367;margin-bottom:10px}
+    .trial-metric strong{display:block;font:700 clamp(27px,3.2vw,40px)/1.1 'Space Grotesk',Arial,sans-serif;letter-spacing:-.07em}
+    .trial-metric strong small{font-size:15px;letter-spacing:-.01em}
+    .trial-chart{padding:12px 0}
+    .chart-label{display:flex;justify-content:space-between;gap:10px;align-items:end;margin-bottom:10px;font:600 12px 'Space Grotesk',Arial,sans-serif;color:#4e6056}
+    .chart-label b{font:700 19px 'Space Grotesk',Arial,sans-serif;color:var(--deep)}
+    .bar-track{height:22px;background:#e2e9df;border-radius:6px;overflow:hidden;position:relative}
+    .bar{height:100%;border-radius:6px;transition:width .5s cubic-bezier(.2,.8,.2,1);min-width:3px}
+    .bar--rigid{background:#7b8f7e}
+    .bar--crumple{background:#a8d749}
+    .chart-sub{font-size:12px;color:#69786b;margin:17px 0 24px;line-height:1.5}
+    .chart-result{border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding-top:21px;gap:10px}
+    .chart-result span{font:700 12px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em}
+    .chart-result strong{font:700 40px 'Space Grotesk',Arial,sans-serif;color:#466f25;letter-spacing:-.08em}
+    .data-table-wrap{overflow-x:auto;margin-top:27px;border:1px solid var(--border);border-radius:13px;background:var(--white)}
+    .data-table{width:100%;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .data-table th{font:700 11px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#516355;background:#e7ede3;padding:18px 18px}
+    .data-table td{padding:18px;font:600 13px 'Space Grotesk',Arial,sans-serif;border-top:1px solid #e5e9e2}
+    .data-table tbody tr:hover{background:#f5f8f0}
+    .data-table td:last-child{color:#3a6c25;font-weight:700}
+    .data-note{font-size:12px;color:#718076;line-height:1.65;margin:17px 2px 0}
+    .physics{background:#e5ebdf;padding:117px 0 113px}
+    .physics-intro{display:grid;grid-template-columns:1fr 1fr;gap:74px;margin-bottom:45px;align-items:end}
+    .physics-intro .section-heading{margin-bottom:0}
+    .physics-intro .lede{margin:0}
+    .diagram-grid{display:grid;grid-template-columns:1fr 1fr;gap:23px}
+    .diagram-card{background:var(--white);border:1px solid #d2dbcd;border-radius:15px;padding:24px 26px 20px;overflow:hidden}
+    .diagram-caption{display:flex;align-items:start;justify-content:space-between;gap:15px}
+    .diagram-caption .fig{font:700 11px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;color:#6f806e;letter-spacing:.12em}
+    .diagram-caption h3{font:700 20px 'Space Grotesk',Arial,sans-serif;letter-spacing:-.05em;margin:6px 0 3px}
+    .diagram-badge{font:700 11px 'Space Grotesk',Arial,sans-serif;padding:9px 11px;border-radius:100px;background:#e9f4dc;white-space:nowrap}
+    .diagram-image{width:100%;height:290px;object-fit:contain;margin-top:15px}
+    .diagram-description{font-size:12px;line-height:1.6;color:#65766a;border-top:1px solid #e6e9e2;padding-top:14px;margin:5px 0 0}
+    .equation-strip{margin-top:20px;border-radius:15px;background:var(--deep);padding:28px 32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;color:var(--white)}
+    .equation-strip > div{border-left:1px solid #496056;padding-left:23px}
+    .equation-strip > div:first-child{border-left:0;padding-left:0}
+    .equation-strip span{display:block;font:600 11px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;color:#b4c8b8;letter-spacing:.1em;margin-bottom:14px}
+    .equation-strip code{font:500 clamp(14px,1.55vw,18px)/1.6 'Space Grotesk',Arial,sans-serif;color:var(--lime);white-space:normal}
+    .setup{background:var(--white);padding:95px 0}
+    .setup-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:center}
+    .setup .section-heading{font-size:clamp(36px,4.25vw,59px)}
+    .setup-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .setup-metric{padding:23px 14px;background:var(--paper);border:1px solid #e8e9e3;border-radius:10px}
+    .setup-metric span{display:block;font:700 10px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;letter-spacing:.09em;color:#63746a;min-height:26px}
+    .setup-metric strong{font:700 clamp(22px,2vw,29px) 'Space Grotesk',Arial,sans-serif;letter-spacing:-.06em}
+    .gallery{padding:119px 0 120px;background:var(--paper)}
+    .gallery-head{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:35px}
+    .gallery-head .section-heading{margin-bottom:0}
+    .gallery-copy{max-width:360px;font-size:15px;line-height:1.7;color:#667467}
+    .gallery-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+    .gallery-figure{margin:0;background:#e5e9dd;border-radius:13px;overflow:hidden;position:relative}
+    .gallery-figure img{width:100%;height:410px;object-fit:cover;transition:transform .5s}
+    .gallery-figure:hover img{transform:scale(1.035)}
+    .gallery-figure--sketch img{object-fit:contain;background:#dcded5}
+    .gallery-figure figcaption{padding:18px 23px 19px;display:flex;justify-content:space-between;gap:15px;align-items:center;font:700 13px 'Space Grotesk',Arial,sans-serif}
+    .gallery-figure figcaption span{font:600 11px 'Space Grotesk',Arial,sans-serif;color:#6d7c70;text-transform:uppercase;letter-spacing:.08em}
+    .cta-grid{display:flex;justify-content:space-between;align-items:center;gap:28px}
+    .cta-grid h2{font:700 clamp(30px,3.6vw,45px)/1.1 'Space Grotesk',Arial,sans-serif;letter-spacing:-.07em;margin:11px 0}
+    .cta-grid p{font-size:14px;line-height:1.65;color:#455d37;max-width:650px;margin:0}
+    .footer{background:var(--deep);color:#d8e4da;padding:43px 0}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap}
+    .footer-text{font:500 12px/1.65 'Space Grotesk',Arial,sans-serif;color:#b1c3b6}
+    .footer-text strong{display:block;color:white;font-size:14px;margin-bottom:3px}
+    .footer-links{display:flex;gap:24px;font:600 12px 'Space Grotesk',Arial,sans-serif}
+    .footer-links a:hover{color:var(--lime)}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+    .reveal.visible{opacity:1;transform:none}
+    @media (max-width:1080px){
+      .wrap{width:min(var(--max),calc(100% - 58px))}
+      .header-inner{min-height:75px}
+      .nav-links{gap:16px}
+      .hero-grid{gap:22px}
+      .hero h1{font-size:clamp(38px,5.4vw,61px)}
+      .hero-visual{min-height:475px}
+      .hero-photo{height:460px}
+      .explain-grid{gap:50px}
+      .about-top{gap:36px}
+      .material{padding:21px 18px}
+      .stat{padding-inline:18px}
+      .trial-grid{gap:27px}
+      .gallery-figure img{height:340px}
+    }
+    @media (max-width:800px){
+      .wrap{width:calc(100% - 42px)}
+      .header-inner>.button{display:none}
+      .menu-button{display:block;margin-left:auto}
+      .nav-links{position:absolute;top:100%;left:0;right:0;background:#142820;display:none;flex-direction:column;align-items:stretch;gap:0;margin:0;padding:12px 21px 22px;border-top:1px solid #284039;box-shadow:0 14px 35px #0004}
+      .nav-links.open{display:flex}
+      .nav-links a{padding:14px 0;border-bottom:1px solid #2a4336;font-size:14px}
+      .hero-grid{grid-template-columns:1fr;gap:35px;padding:60px 0 77px}
+      .hero h1{font-size:clamp(39px,6.5vw,57px);margin-top:22px}
+      .hero-description{max-width:590px}
+        .hero-visual{min-height:unset;max-width:680px;width:100%;margin:0 auto}
+      .hero-photo{height:min(70vw,460px)}
+          .stats-inner{grid-template-columns:1fr 1fr}
+      .stat{border-bottom:1px solid #9ec35d}
+      .stat:nth-child(odd){border-left:0;padding-left:0}
+      .stat:nth-last-child(-n+2){border-bottom:0}
+      .about,.testing,.gallery{padding:88px 0}
+      .about-top,.physics-intro{grid-template-columns:1fr;gap:5px}
+      .about-intro{padding-top:0}
+      .about-layout,.explain-grid,.trial-grid,.setup-grid{grid-template-columns:1fr}
+      .sketch-card{min-height:350px}
+      .sketch-card img{max-height:520px}
+      .material{min-height:190px}
+      .explain{padding:88px 0}
+      .explain-grid{gap:35px}
+      .explain-card{max-width:590px}
+      .testing-header{align-items:start;flex-direction:column;gap:15px}
+      .testing-header .lede{max-width:610px}
+      .trial-grid{gap:30px}
+      .physics{padding:88px 0}
+      .diagram-grid{gap:14px}
+      .diagram-card{padding:18px}
+      .diagram-image{height:225px}
+      .setup{padding:78px 0}
+      .setup-grid{gap:20px}
+      .gallery-head{align-items:start;flex-direction:column;gap:10px}
+      .gallery-copy{margin:0}
+      .gallery-figure img{height:280px}
+      .cta-grid{align-items:start;flex-direction:column}
+    }
+    @media (max-width:560px){
+      .wrap{width:calc(100% - 36px)}
+      .header-inner{min-height:72px}
+      .hero h1{font-size:clamp(36px,10vw,51px)}
+      .hero .tag{font-size:11px}
+      .hero-description{font-size:15px}
+      .hero-grid{padding-top:52px}
+      .hero-photo{height:340px;border-width:6px;border-bottom-right-radius:54px}
+      .photo-caption{bottom:25px;left:20px}
+      .photo-caption b{font-size:22px}
+          .stats-inner{grid-template-columns:1fr 1fr}
+      .stat{padding:23px 7px}
+      .stat-number{font-size:clamp(27px,7vw,36px)}
+      .stat-caption{font-size:9px;letter-spacing:0}
+      .section-heading{font-size:clamp(30px,8vw,41px)}
+      .about,.testing,.gallery{padding:75px 0}
+      .about-top{margin-bottom:32px}
+      .sketch-card{padding:7px;min-height:290px}
+      .sketch-card img{height:330px}
+      .sketch-card .corner-label{top:15px;left:15px;font-size:9px}
+      .materials{gap:9px}
+      .material{min-height:210px;padding:18px 13px}
+      .material-icon{width:30px;height:30px}
+      .material h3{font-size:18px}
+      .material p{font-size:11px}
+      .material-index{font-size:10px}
+      .explain{padding:75px 0}
+      .explain-card{padding:22px 20px}
+      .big-result{padding-top:23px}
+      .big-result strong{font-size:clamp(58px,14vw,90px)}
+      .process-box{padding:12px 6px}
+      .process-box b{font-size:18px}
+      .process-box span{font-size:9px}
+      .trial-panel{padding:23px 18px 27px}
+      .trial-top{align-items:start;flex-direction:column}
+      .trial-metric{padding:17px 13px}
+      .trial-metric strong{font-size:28px}
+      .trial-metric span{font-size:10px;letter-spacing:.035em}
+      .trial-grid{padding-top:22px}
+      .chart-result strong{font-size:34px}
+      .physics{padding:74px 0}
+      .diagram-grid{grid-template-columns:1fr}
+      .diagram-image{height:245px}
+      .equation-strip{grid-template-columns:1fr;padding:24px 22px;gap:14px}
+      .equation-strip>div,.equation-strip>div:first-child{padding:0 0 14px;border-left:0;border-bottom:1px solid #496056}
+      .equation-strip>div:last-child{border:0;padding:0}
+      .equation-strip span{margin-bottom:5px}
+      .setup-metrics{grid-template-columns:1fr 1fr;gap:8px}
+      .setup-metric{padding:18px 12px}
+      .gallery-grid{grid-template-columns:1fr}
+      .gallery-figure img{height:275px}
+      .gallery-figure--sketch img{height:300px}
+      .footer-links{gap:15px}
+    }
+
+    /* Browser-native MathML gives stacked fractions and proper super/subscripts, even offline. */
+    .equation-strip{align-items:start}
+    .equation-strip > div{min-width:0;overflow-x:auto;scrollbar-width:thin}
+    .equation-strip math{font-family:'STIX Two Math','STIX Math','Cambria Math','DejaVu Math TeX Gyre',serif;font-size:clamp(19px,1.85vw,26px);line-height:1.6;color:var(--lime);width:max-content;max-width:none;padding:2px 2px 6px}
+    .calculation-guide{margin:60px 0 23px;display:flex;align-items:flex-end;justify-content:space-between;gap:22px}
+    .calculation-guide h3{font:700 clamp(26px,3vw,38px)/1.15 'Space Grotesk',Arial,sans-serif;letter-spacing:-.045em;margin:0 0 10px}
+    .calculation-guide p{max-width:800px;font-size:15px;line-height:1.73;color:#526459;margin:0}
+    .mobile-math-tip{display:none}
+    .calc-skip{flex-shrink:0;color:#2e5234;font:700 12px 'Space Grotesk',Arial,sans-serif;padding-bottom:7px;border-bottom:1px solid #859989}
+    .calc-step{display:grid;grid-template-columns:minmax(220px,.65fr) minmax(0,1.35fr);gap:44px;border-top:1px solid #c7d2c3;padding:37px 0 41px}
+    .calc-step-copy{min-width:0}
+    .calc-index{display:block;color:#526f59;font:600 11px 'Space Grotesk',Arial,sans-serif;letter-spacing:.1em;margin-bottom:14px}
+    .calc-step h3{font:700 clamp(21px,2.25vw,28px)/1.15 'Space Grotesk',Arial,sans-serif;letter-spacing:-.045em;margin:0 0 12px}
+    .calc-step-copy p{font-size:14px;line-height:1.82;color:#506255;margin:0}
+    .calc-step-work{min-width:0;background:#fffefa;border:1px solid #cfd9ca;border-radius:12px;overflow:hidden;align-self:start;box-shadow:0 9px 30px #25402a08}
+    .math-line{padding:17px 24px 18px;border-bottom:1px solid #e3e9dd;overflow-x:auto;scrollbar-width:thin}
+    .math-line:last-child{border-bottom:0}
+    .formula-label{display:block;font:700 10px 'Space Grotesk',Arial,sans-serif;text-transform:uppercase;letter-spacing:.075em;color:#687e69;margin-bottom:11px}
+    .math-line math{font-family:'STIX Two Math','STIX Math','Cambria Math','DejaVu Math TeX Gyre',serif;color:var(--ink);font-size:clamp(20px,1.83vw,25px);line-height:1.7;display:block;width:max-content;max-width:none;padding:2px 1px 6px}
+    .math-line math+math{margin-top:12px}
+    .math-wide{display:block}
+    .math-narrow{display:none}
+    .math-line .formula-note{font-size:12px;margin:5px 0 0;color:#607564;line-height:1.5}
+    .calc-footnote{padding:13px 24px 15px;margin:0;background:#eff4e9;border-top:1px solid #dce5d6;color:#566b58;font-size:12px;line-height:1.65}
+    .calc-summary{padding-top:9px}
+    .calc-summary h3{font:700 clamp(25px,2.7vw,34px) 'Space Grotesk',Arial,sans-serif;letter-spacing:-.05em;margin:16px 0 8px}
+    .calc-summary>p:not(.data-note){font-size:14px;line-height:1.7;color:#526459;max-width:780px;margin:0 0 20px}
+    .calc-table-wrap{width:100%;overflow-x:auto;background:var(--white);border:1px solid #cad8c4;border-radius:13px;scrollbar-width:thin}
+    .calc-table{border-collapse:collapse;width:100%;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:left}
+    .calc-table th{padding:16px 14px;font:700 11px/1.45 'Space Grotesk',Arial,sans-serif;background:#d7e1d3;color:#4d654e;min-width:105px}
+    .calc-table td{padding:18px 14px;font:600 12px 'Space Grotesk',Arial,sans-serif;border-top:1px solid #e4e9e0}
+    .calc-table tr:nth-child(even) td{background:#f5f8f1}
+    .calc-table td:first-child{font-weight:700;color:#314f37}
+    @media(max-width:800px){
+      .calc-step{grid-template-columns:1fr;gap:19px;padding:30px 0 35px}
+      .calc-step-copy p{max-width:730px}
+      .calculation-guide{align-items:flex-start}
+      .equation-strip math{font-size:24px}
+    }
+    @media(max-width:560px){
+      .calculation-guide{margin-top:43px;display:block}
+      .mobile-math-tip{display:block!important;font-size:12px!important;margin-top:7px!important;color:#647665!important}
+      .calc-skip{display:inline-block;margin-top:16px}
+      .calc-step{gap:16px}
+      .calc-step h3{font-size:22px}
+      .calc-step-copy p{font-size:13px}
+      .math-line{padding:15px 14px 16px}
+      .math-line math{font-size:21px}
+      .math-wide{display:none}
+      .math-narrow{display:block}
+      .math-narrow math+math{margin-top:9px}
+      .calc-footnote{padding:13px 14px}
+      .calc-table th,.calc-table td{padding:13px 11px}
+    }
+
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+    /* Revised light theme and simplified layout */
+    :root{--ink:#1f1f1f;--deep:#ffffff;--deep2:#f2f2f2;--paper:#ffffff;--white:#ffffff;--lime:#d97a20;--mid:#666;--border:#d9d9d9;--soft:#f1f1f1;--orange:#d97a20;--max:1240px}
+    *{border-radius:0 !important}
+    body{background:var(--paper);color:var(--ink)}
+    ::selection{background:#f3c69b;color:#111}
+    .header,.hero,.explain,.physics,.setup,.gallery,.footer{background:#fff;color:var(--ink)}
+    .menu-button{display:none !important}
+    .about,.testing{background:#f5f5f5}
+    .physics{background:#efefef}
+    .stats,.hero-visual,.hero-actions{display:none !important}
+    .hero:before,.explain:after{display:none}
+    .header{border-bottom:1px solid var(--border)}
+    .brand,.brand-name,.nav-links a,.menu-button{color:var(--ink)}
+    .brand-mark{background:#efefef;color:var(--ink);border:1px solid var(--border)}
+    .brand-name span,.nav-links a{color:#555}
+    .nav-links a:hover,.footer-links a:hover{color:var(--orange)}
+    .menu-button{border-color:var(--border);background:#fff}
+    .hero-grid{grid-template-columns:1fr;padding:52px 0}
+    .hero-copy{max-width:760px;padding-bottom:0}
+    .hero .tag,.explain .tag{color:var(--orange)}
+    .hero-description,.lede,.about-intro p,.gallery-copy,.data-note,.diagram-description,.calc-step-copy p,.calc-footnote,.calc-summary p{color:#555}
+    .section-heading,.hero h1,.cta-grid h2,.diagram-caption h3,.trial-top h3,.calc-step h3,.calc-summary h3,.brand-name{color:#111}
+    .tag::before,.corner-label,.diagram-badge,.bar--crumple,.calc-index,.chart-result strong{background:var(--orange);color:#fff}
+    .sketch-card,.material,.trial-panel,.data-table-wrap,.diagram-card,.gallery-figure,.setup-metric,.calc-summary,.math-line,.calc-footnote,.equation-strip,.explain-card,.process-box,.trial-metric,.bar-track,.data-table-wrap,.calc-table-wrap{background:#fff;border-color:var(--border);box-shadow:none}
+    .sketch-card img,.gallery-figure--sketch img{background:#f2f2f2}
+    .material-icon{background:#f5f5f5}
+    .material:hover,.gallery-figure:hover img,.button:hover{transform:none}
+    .principle-list li{color:#444;border-top:1px solid var(--border)}
+    .principle-list li b{color:var(--orange)}
+    .explain-card{padding:28px;border:1px solid var(--border)}
+    .explain-card:before{display:none}
+    .process-box span,.formula-label,.calc-table th,.data-table th,.trial-metric span,.setup-metric span,.diagram-caption .fig,.footer-text{color:#666}
+    .process-box b,.trial-metric strong,.setup-metric strong,.equation-strip code{color:#111}
+    .equation-strip{background:#f4f4f4;color:#111}
+    .equation-strip > div{border-left:1px solid var(--border)}
+    .trial-button[aria-selected="true"]{background:#fff;color:#111;border:1px solid var(--border);box-shadow:none}
+    .trial-buttons{background:#f1f1f1}
+    .trial-button{color:#555}
+    .bar-track{background:#ededed}
+    .bar--rigid{background:#bcbcbc}
+    .chart-sub,.stat-caption,.brand-name span,.footer-text{color:#666}
+    .diagram-badge{padding:9px 11px}
+    .footer{border-top:1px solid var(--border);padding:34px 0;background:#f7f7f7}
+    .footer-text strong{color:#111}
+    .footer-links{gap:0}
+    .footer-links a{color:#111}
+    @media (max-width:800px){.nav-links{position:static;display:flex !important;flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px;padding:0;border-top:0;box-shadow:none;background:transparent}.nav-links a{padding:0;border-bottom:0;font-size:12px}.hero-grid{padding:42px 0}.header-inner>.button{display:none}}
+
+  
+/* Final layout: Verdana, neutral gray, white and selective orange. */
+:root { --ink:#171717; --deep:#fff; --deep2:#f4f4f4; --paper:#fff; --white:#fff; --lime:#cf752e; --mid:#626262; --border:#dadada; --soft:#f4f4f4; --orange:#cf752e }
+html,body,body *:not(math):not(math *) { font-family:Verdana,Geneva,sans-serif !important; }
+math, math * {font-family:'Cambria Math','STIX Two Math',serif !important}
+*,*::before,*::after{border-radius:0!important}
+body,.header,.hero,.explain,.setup,.gallery{background:#fff!important;color:#171717}
+.about,.testing,.footer{background:#f5f5f5!important;color:#171717}
+.physics{background:#f0f0f0!important;color:#171717}
+.hero:before,.hero-photo:after,.explain:after{display:none!important;background:none!important}
+.brand-mark,.material-icon,.setup-metric,.trial-metric{background:#efefef!important;color:#171717}
+.nav-links a,.brand-name span,.lede,.hero-description,.about-intro p,.principle-list li,.gallery-copy,.footer-text,.footer-text strong,.material p,.diagram-description,.calc-step-copy p,.calc-footnote,.calc-summary p,.data-note,.chart-sub,.formula-label{color:#575757!important}
+.footer-text strong{color:#171717!important}
+.header,.footer{border-color:#d9d9d9!important}
+.hero h1,.section-heading,.material h3,.diagram-caption h3,.calculation-guide h3,.calc-step h3,.calc-summary h3{color:#171717!important;letter-spacing:-.02em}
+.material,.sketch-card,.sketch-card img,.explain-card,.process-box,.trial-panel,.diagram-card,.calc-step-work,.math-line,.calc-summary,.calc-table-wrap,.data-table-wrap,.setup-metric,.gallery-figure,.calc-footnote{background:#fff!important;border-color:#d9d9d9!important;box-shadow:none!important}
+.material{min-height:220px!important}
+.materials{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
+.sketch-card{background:#ededed!important}
+.sketch-card img,.gallery-figure--sketch img{background:#ededed!important}
+.sketch-card .corner-label{background:#fff!important;color:#333!important;border:1px solid #ccc;box-shadow:none!important}
+.tag::before{background:#cf752e!important}
+.explain .tag,.hero .tag{color:#cf752e!important}
+.principle-list li,.calculation-guide,.calc-step{border-color:#d9d9d9!important}
+.principle-list li b{color:#cf752e!important}
+.process-box span,.process-box b,.chart-label b{color:#171717!important}
+.explain-card .process{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+.explain-card .process-box{flex:1 1 170px}
+.process-arrow{color:#888!important}
+.diagram-grid{margin-bottom:20px}
+.diagram-card{border:1px solid #d9d9d9!important}
+.diagram-image{background:#fff!important}
+.calculation-guide{margin-top:48px}
+.calc-index{display:block;width:auto;background:none!important;color:#777!important}
+.calc-step-work{overflow:hidden}
+.math-line{background:#fff!important;border-bottom:1px solid #e5e5e5!important;overflow-x:auto}
+.math-line math{color:#171717!important}
+.calc-footnote{background:#f5f5f5!important;color:#555!important;border-top:1px solid #e5e5e5!important}
+.calc-table th,.data-table th{background:#ececec!important;color:#333!important}
+.calc-table tr:nth-child(even) td,.data-table tbody tr:hover{background:#f8f8f8!important}
+.calc-table td:first-child,.data-table td:last-child{color:#222!important}
+.gallery-figure{background:#f1f1f1!important}
+.gallery-figure img,.material{transform:none!important}
+@media(max-width:560px){
+  .materials{gap:10px!important}
+  .material{min-height:200px!important;padding:16px 12px!important}
+  .material h3{font-size:16px!important}
+  .material p{font-size:11px!important}
+  .diagram-grid{grid-template-columns:1fr}
+  .calc-step{grid-template-columns:1fr;gap:16px}
+  .math-line{padding:14px 12px}
+  .math-line math{font-size:19px!important;max-width:none}
+  .nav-links{gap:9px!important}
+  .nav-links a{font-size:11px!important}
+  .brand-mark{display:none}
+}
+
+/* Final spacing, title, and table treatment */
+.hero-title-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 clamp(18px,4vw,58px)}
+.hero-title-row h1{margin:19px 0 16px}
+.hero-author{font:400 clamp(15px,1.6vw,19px)/1.5 Verdana,Geneva,sans-serif;color:#555;white-space:nowrap}
+#all-trial-calculations{background:transparent!important;border:0!important;box-shadow:none!important}
+#all-trial-calculations .calc-table-wrap{background:transparent!important;border:0!important;box-shadow:none!important}
+#all-trial-calculations .calc-table,#all-trial-calculations .calc-table th,#all-trial-calculations .calc-table td{background:transparent!important;box-shadow:none!important}
+#all-trial-calculations .calc-table th{border-bottom:2px solid #c6c6c6}
+#all-trial-calculations .calc-table td{border-top:1px solid #d0d0d0}
+@media(max-width:560px){.hero-title-row{column-gap:10px}.hero-title-row h1{font-size:clamp(25px,7.2vw,32px);margin-bottom:10px}.hero-author{font-size:13px}}
+
+
+/* Data-collection evidence and crumple-zone discussion */
+.raw-data{padding:29px 0 42px;margin:42px 0 8px;border-top:1px solid #d1d1d1;border-bottom:1px solid #d1d1d1}
+.raw-data h3{font-size:clamp(23px,2.5vw,32px);line-height:1.3;margin:0 0 11px;color:#181818}
+.raw-data-intro{margin:0 0 30px;font-size:14px;line-height:1.75;color:#555}
+.raw-data-section{margin:0 0 31px}
+.raw-data-section:last-child{margin-bottom:0}
+.raw-data-section h4{font-size:16px;font-weight:700;margin:0 0 10px;color:#202020}
+.raw-data-section p{font-size:13px;line-height:1.7;color:#555;margin:0 0 13px}
+.raw-data-section strong{color:#171717}
+.raw-data-scroll{overflow-x:auto;max-width:100%;scrollbar-width:thin;outline-offset:3px}
+.raw-data-table{border-collapse:collapse;width:100%;white-space:nowrap;text-align:left;font-variant-numeric:tabular-nums;background:transparent}
+.raw-data-table th{background:#e3e3e3;color:#2d2d2d;font-weight:700;font-size:11px;letter-spacing:0;line-height:1.5;padding:13px 16px;border-bottom:1px solid #c6c6c6}
+.raw-data-table td{font-size:12px;font-weight:400;padding:13px 16px;border-bottom:1px solid #d5d5d5;color:#303030}
+.raw-data-table tr:last-child td{border-bottom:1px solid #bbb}
+.raw-data-table .raw-mean td{font-weight:700;background:#ededed}
+.effectiveness{background:#fff;padding:94px 0 98px;border-top:1px solid #ddd}
+.effectiveness-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:72px;align-items:start}
+.effectiveness .tag{color:#cf752e}
+.effectiveness .section-heading{margin:13px 0 16px}
+.effectiveness-body{padding-top:7px}
+.effectiveness-body h3{font-size:19px;line-height:1.45;margin:0 0 17px;color:#181818}
+.effectiveness-discussion{font-size:15px;line-height:1.9;color:#444;margin:0}
+.compliance-note{margin-top:27px;padding:23px 25px;background:#f0f0f0;border-left:3px solid #cf752e}
+.compliance-note h3{font-size:15px;margin:0 0 6px}
+.compliance-note p{margin:0;font-size:13px;line-height:1.8;color:#484848}
+@media(max-width:800px){.effectiveness-layout{grid-template-columns:1fr;gap:22px}.effectiveness{padding:72px 0}.effectiveness-body{padding-top:0}}
+@media(max-width:560px){.raw-data{margin-top:25px;padding-top:25px}.raw-data-section h4{font-size:14px}.raw-data-table th,.raw-data-table td{padding:12px}.effectiveness{padding:60px 0}.effectiveness-discussion{font-size:14px}.compliance-note{padding:19px}}
+</style>
+</head>
+<body>
+<header class="header" id="top">
+<div class="wrap header-inner">
+<a aria-label="Dynamic Cart Lab home" class="brand" href="#top">
+<span class="brand-name">DYNAMIC<br/>CART LAB<span>SPH4UE · PHYSICS</span></span>
+</a>
+<nav aria-label="Primary navigation" class="nav-links" id="site-nav">
+<a href="#design">Design</a><a href="#results">Results</a><a href="#physics">Calculations</a><a href="#why">Discussion</a><a href="#gallery">Photos</a>
+</nav>
+</div>
+</header>
+<main>
+<section aria-labelledby="hero-title" class="hero">
+<div class="wrap hero-grid">
+<div class="hero-copy">
+<span class="tag">SPH4UE / PHYSICS</span>
+<div class="hero-title-row"><h1 id="hero-title">Dynamic Cart Lab</h1><span class="hero-author">Ivan K.</span></div>
+<p class="hero-description">This lab tested a model cart with a crumple zone and calculated its impact force using measurements from three trials.</p>
+</div>
+</div>
+</section>
+<section aria-labelledby="design-title" class="about" id="design">
+<div class="wrap">
+<div class="about-top reveal">
+<div class="about-title"><h2 class="section-heading" id="design-title">Cart design</h2></div>
+<div class="about-intro"><p>The cart was fitted with a front crumple zone, front pipe-cleaner padding, pom-pom cushioning for the passengers, and restraints to hold the model passengers in place.</p></div>
+</div>
+<div class="about-layout">
+<div class="sketch-card reveal"><img alt="Original pencil drawing labeling the cart's pipe-cleaner guardrails, pom-pom airbag, elastic seat belt, hollow paper cylinder and front impact padding" loading="lazy" src="assets/labeled-sketch.webp"/><span class="corner-label">Labeled design sketch</span></div>
+<div class="materials">
+<article class="material reveal"><div class="material-index"><span>MATERIAL / 1</span><span aria-hidden="true" class="material-icon">◎</span></div><div><h3>Paper crumple zone</h3><p>Hollow paper cylinder at the front of the cart, designed to compress during impact.</p></div></article>
+<article class="material reveal"><div class="material-index"><span>MATERIAL / 2</span><span aria-hidden="true" class="material-icon">✳</span></div><div><h3>Pipe cleaners</h3><p>Used along the sides as guardrails and at the front, where they also compress during impact.</p></div></article>
+<article class="material reveal"><div class="material-index"><span>MATERIAL / 3</span><span aria-hidden="true" class="material-icon">◉</span></div><div><h3>Pom-pom airbag</h3><p>Placed in front of the passengers to cushion them during the collision.</p></div></article>
+<article class="material reveal"><div class="material-index"><span>MATERIAL / 4</span><span aria-hidden="true" class="material-icon">⌁</span></div><div><h3>Passenger restraints</h3><p>Elastic bands used to hold the model passengers in place.</p></div></article>
+</div>
+</div>
+</div>
+</section>
+<section aria-labelledby="results-title" class="testing" id="results">
+<div class="wrap">
+<div class="testing-header reveal"><div><h2 class="section-heading" id="results-title">Impact test results</h2></div><p class="lede">The table below summarizes the three impact trials and compares the calculated barrier force with the rigid-cart model.</p></div>
+<div class="data-table-wrap reveal"><table class="data-table"><thead><tr><th>Trial</th><th>Travel distance</th><th>Impact speed</th><th>Compression</th><th>Crumple force</th><th>Rigid force</th><th>Reduction</th></tr></thead><tbody><tr><td>1</td><td>0.773 m</td><td>0.931 m/s</td><td>2.2 cm</td><td>12 N</td><td>2,500 N</td><td>99.5%</td></tr><tr><td>2</td><td>0.775 m</td><td>0.963 m/s</td><td>2.8 cm</td><td>9.9 N</td><td>2,700 N</td><td>99.6%</td></tr><tr><td>3</td><td>0.777 m</td><td>1.02 m/s</td><td>2.3 cm</td><td>14 N</td><td>3,000 N</td><td>99.6%</td></tr></tbody></table></div>
+</div>
+</section>
+<section aria-labelledby="physics-title" class="physics" id="physics">
+<div class="wrap">
+<div class="physics-intro reveal">
+<div><h2 class="section-heading" id="physics-title">Forces and calculations</h2></div>
+<p class="lede">The calculations use Newton’s second law and constant-acceleration equations to estimate friction, impact speed, stopping acceleration, and force.</p>
+</div>
+<div class="diagram-grid">
+<figure class="diagram-card reveal">
+<div class="diagram-caption"><div><span class="fig">Figure 1</span><h3>Forces on the inclined cart</h3></div></div>
+<img alt="Free-body diagram showing the normal force, gravity components, friction, and ramp direction" class="diagram-image" loading="lazy" src="assets/ramp-forces.png"/>
+<figcaption class="diagram-description">Friction acts up the incline; the component of gravity parallel to the incline acts down the ramp. The ramp angle is exaggerated.</figcaption>
+</figure>
+<figure class="diagram-card reveal">
+<div class="diagram-caption"><div><span class="fig">Figure 2</span><h3>Forces during impact</h3></div></div>
+<img alt="Free-body diagram during collision showing the barrier force, friction, ramp forces, and crumple compression" class="diagram-image" loading="lazy" src="assets/impact-forces.png"/>
+<figcaption class="diagram-description">During the collision, the barrier force acts against the cart’s motion and the crumple zone compresses.</figcaption>
+</figure>
+</div>
+<div aria-labelledby="raw-data-title" class="raw-data reveal" id="collected-data">
+<h3 id="raw-data-title">Collected data</h3>
+<p class="raw-data-intro">The measurements below were used in the friction, impact-velocity, and impact-force calculations.</p>
+<div class="raw-data-section">
+<h4>Standard cart — friction trials</h4>
+<p>Unmodified cart mass: <strong>0.5085 kg</strong>. Released from rest on a ramp 10.65 cm high and approximately 100 cm long.</p>
+<div aria-label="Friction trial measurements, scroll horizontally if needed" class="raw-data-scroll" role="region" tabindex="0">
+<table class="raw-data-table"><thead><tr><th scope="col">Trial</th><th scope="col">Time (s)</th><th scope="col">Displacement (m)</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>1.75</td><td>0.887</td></tr>
+<tr><td>2</td><td>1.85</td><td>0.879</td></tr>
+<tr><td>3</td><td>2.00</td><td>0.885</td></tr>
+<tr class="raw-mean"><td>Mean</td><td>1.87</td><td>0.884</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="raw-data-section">
+<h4>Modified cart — descent to impact</h4>
+<p>Cart mass with modifications and passengers: <strong>0.5789 kg</strong>. Each trial started from rest; the barrier was at 0.995 m.</p>
+<div aria-label="Velocity trial measurements, scroll horizontally if needed" class="raw-data-scroll" role="region" tabindex="0">
+<table class="raw-data-table"><thead><tr>
+<th scope="col">Trial</th><th scope="col">Initial time (s)</th><th scope="col">Final time (s)</th><th scope="col">Initial position (m)</th><th scope="col">Final position (m)</th><th scope="col">Elapsed time (s)</th><th scope="col">Travel distance (m)</th>
+</tr></thead><tbody>
+<tr><td>1</td><td>3.04</td><td>4.70</td><td>0.222</td><td>0.995</td><td>1.66</td><td>0.773</td></tr>
+<tr><td>2</td><td>1.03</td><td>2.64</td><td>0.220</td><td>0.995</td><td>1.61</td><td>0.775</td></tr>
+<tr><td>3</td><td>2.67</td><td>4.19</td><td>0.218</td><td>0.995</td><td>1.52</td><td>0.777</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="raw-data-section">
+<h4>Modified cart — crumple-zone measurements</h4>
+<p>Deformation distance is the absolute difference between the two measured positions.</p>
+<div aria-label="Crumple-zone trial measurements, scroll horizontally if needed" class="raw-data-scroll" role="region" tabindex="0">
+<table class="raw-data-table"><thead><tr>
+<th scope="col">Trial</th><th scope="col">Position before crumple (m)</th><th scope="col">Position at maximum crumple (m)</th><th scope="col">Time at maximum crumple (s)</th><th scope="col">Deformation distance (cm)</th>
+</tr></thead><tbody>
+<tr><td>1</td><td>0.645</td><td>0.623</td><td>4.74</td><td>2.2</td></tr>
+<tr><td>2</td><td>0.615</td><td>0.643</td><td>2.73</td><td>2.8</td></tr>
+<tr><td>3</td><td>0.649</td><td>0.626</td><td>4.22</td><td>2.3</td></tr>
+</tbody></table>
+</div>
+</div>
+</div><div class="calculation-guide reveal">
+<div><h3>Calculation walkthrough</h3>
+<p>Trial 1 is used as the worked impact example. The friction calculation uses measurements from the unmodified cart.</p></div>
+</div>
+<article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">1</span><h3>Ramp angle</h3><p>The height of the ramp was 10.65 cm and its approximate length was 100 cm. Use the sine ratio to calculate the angle. The centimetres cancel because the ratio uses two lengths.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Sine ratio</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mspace width="0.15em"></mspace><mi mathvariant="normal">sin</mi><mspace width="0.08em"></mspace><mi>θ</mi><mo>=</mo><mfrac><mrow><mi>h</mi></mrow><mrow><mi>L</mi></mrow></mfrac></mrow></math></div><div class="math-line"><span class="formula-label">Substitute ramp measurements</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mspace width="0.15em"></mspace><mi mathvariant="normal">sin</mi><mspace width="0.08em"></mspace><mi>θ</mi><mo>=</mo><mfrac><mrow><mrow><mn>10.65</mn><mspace width="0.2em"></mspace><mtext>cm</mtext></mrow></mrow><mrow><mrow><mn>100</mn><mspace width="0.2em"></mspace><mtext>cm</mtext></mrow></mrow></mfrac><mo>=</mo><mn>0.1065</mn></mrow></math></div><div class="math-line"><span class="formula-label">Solve for the incline</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>θ</mi><mo>=</mo><msup><mi mathvariant="normal">sin</mi><mn>−1</mn></msup><mrow><mo>(</mo><mn>0.1065</mn><mo>)</mo></mrow></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>≈</mo><mrow><mn>6.11</mn><mspace width="0.2em"></mspace><mtext>°</mtext></mrow><mo>≈</mo><mrow><mn>6.1</mn><mspace width="0.2em"></mspace><mtext>°</mtext></mrow></mrow></math></div></div></article><article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">2</span><h3>Coefficient of friction</h3><p>First, use the unmodified cart’s three descent trials to calculate the average time and distance. Since it started from rest, the displacement equation gives experimental acceleration. Compare that with the acceleration expected from gravity to determine friction.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Average time and distance</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover accent="true"><mi>t</mi><mo>¯</mo></mover><mo>=</mo><mfrac><mrow><mrow><mn>1.75</mn><mo>+</mo><mn>1.85</mn><mo>+</mo><mn>2.00</mn></mrow></mrow><mrow><mn>3</mn></mrow></mfrac><mo>=</mo><mrow><mn>1.8667</mn><mspace width="0.2em"></mspace><mtext>s</mtext></mrow></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover accent="true"><mi>d</mi><mo>¯</mo></mover><mo>=</mo><mfrac><mrow><mrow><mn>0.887</mn><mo>+</mo><mn>0.879</mn><mo>+</mo><mn>0.885</mn></mrow></mrow><mrow><mn>3</mn></mrow></mfrac><mo>=</mo><mrow><mn>0.8837</mn><mspace width="0.2em"></mspace><mtext>m</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Acceleration with no friction</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>a</mi><mtext>theo</mtext></msub><mo>=</mo><mi>g</mi><mspace width="0.15em"></mspace><mi mathvariant="normal">sin</mi><mspace width="0.08em"></mspace><mi>θ</mi></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mn>9.81</mn><mspace width="0.15em"></mspace><mi mathvariant="normal">sin</mi><mspace width="0.08em"></mspace><mrow><mo>(</mo><mrow><mn>6.1</mn><mspace width="0.2em"></mspace><mtext>°</mtext></mrow><mo>)</mo></mrow><mo>=</mo><mrow><mn>1.0425</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Acceleration from the measured motion</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>a</mi><mtext>exp</mtext></msub><mo>=</mo><mfrac><mrow><mrow><mn>2</mn><mover accent="true"><mi>d</mi><mo>¯</mo></mover></mrow></mrow><mrow><msup><mover accent="true"><mi>t</mi><mo>¯</mo></mover><mn>2</mn></msup></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mfrac><mrow><mrow><mn>2</mn><mo>×</mo><mn>0.8837</mn></mrow></mrow><mrow><msup><mrow><mo>(</mo><mn>1.8667</mn><mo>)</mo></mrow><mn>2</mn></msup></mrow></mfrac><mo>=</mo><mrow><mn>0.5072</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Acceleration and force caused by friction</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>a</mi><mtext>friction</mtext></msub><mo>=</mo><msub><mi>a</mi><mtext>theo</mtext></msub><mo>−</mo><msub><mi>a</mi><mtext>exp</mtext></msub><mo>=</mo><mrow><mn>0.535</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>F</mi><mtext>k</mtext></msub><mo>=</mo><msub><mi>m</mi><mtext>s</mtext></msub><msub><mi>a</mi><mtext>friction</mtext></msub><mo>=</mo><mn>0.5085</mn><mo>×</mo><mn>0.535</mn><mo>=</mo><mrow><mn>0.272</mn><mspace width="0.2em"></mspace><mtext>N</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Solve for friction coefficient</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>μ</mi><mtext>k</mtext></msub><mo>=</mo><mfrac><mrow><mrow><mi>g</mi><mspace width="0.15em"></mspace><mi mathvariant="normal">sin</mi><mspace width="0.08em"></mspace><mi>θ</mi><mo>−</mo><msub><mi>a</mi><mtext>exp</mtext></msub></mrow></mrow><mrow><mrow><mi>g</mi><mspace width="0.15em"></mspace><mi mathvariant="normal">cos</mi><mspace width="0.08em"></mspace><mi>θ</mi></mrow></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mfrac><mrow><mrow><mn>1.0425</mn><mo>−</mo><mn>0.5072</mn></mrow></mrow><mrow><mrow><mn>9.81</mn><mspace width="0.15em"></mspace><mi mathvariant="normal">cos</mi><mspace width="0.08em"></mspace><mrow><mo>(</mo><mrow><mn>6.1</mn><mspace width="0.2em"></mspace><mtext>°</mtext></mrow><mo>)</mo></mrow></mrow></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mn>0.0549</mn></mrow></math></div><p class="calc-footnote">The normal force is Fₙ = mg cos θ; friction acts up the ramp, opposite the cart’s motion.</p></div></article><article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">3</span><h3>Acceleration and impact velocity</h3><p>The completed cart (mass 0.5789 kg) was released from rest. In Trial 1, it travelled 0.773 m in 1.66 s before reaching the barrier. Find the acceleration first, then the speed at impact.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Known values for Trial 1</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>Δx</mi><mo>=</mo><mrow><mn>0.773</mn><mspace width="0.2em"></mspace><mtext>m</mtext></mrow></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>Δt</mi><mo>=</mo><mrow><mn>1.66</mn><mspace width="0.2em"></mspace><mtext>s</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Acceleration from displacement</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>Δx</mi><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mi>a</mi><msup><mi>Δt</mi><mn>2</mn></msup></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>a</mi><mo>=</mo><mfrac><mrow><mrow><mn>2</mn><mi>Δx</mi></mrow></mrow><mrow><msup><mi>Δt</mi><mn>2</mn></msup></mrow></mfrac></mrow></math></div><div class="math-line"><span class="formula-label">Calculate the acceleration</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>a</mi><mo>=</mo><mfrac><mrow><mrow><mn>2</mn><mo>×</mo><mn>0.773</mn></mrow></mrow><mrow><msup><mrow><mo>(</mo><mn>1.66</mn><mo>)</mo></mrow><mn>2</mn></msup></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mrow><mn>0.561</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Calculate impact speed</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>v</mi><mtext>impact</mtext></msub><mo>=</mo><mi>a</mi><mi>Δt</mi><mo>=</mo><mfrac><mrow><mrow><mn>2</mn><mi>Δx</mi></mrow></mrow><mrow><mi>Δt</mi></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mfrac><mrow><mrow><mn>2</mn><mo>×</mo><mn>0.773</mn></mrow></mrow><mrow><mn>1.66</mn></mrow></mfrac><mo>=</mo><mrow><mn>0.931</mn><mspace width="0.2em"></mspace><mtext>m/s</mtext></mrow></mrow></math></div><p class="calc-footnote">The other two trials gave impact velocities of 0.963 m/s and 1.02 m/s.</p></div></article><article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">4</span><h3>Crumple distance and impact acceleration</h3><p>The compression distance is the magnitude of the change in position. The cart stops at the barrier, so the final velocity is zero and the acceleration acts opposite the motion.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Measured compression in Trial 1</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mtext>c</mtext></msub><mo>=</mo><mrow><mo>|</mo><mn>0.645</mn><mo>−</mo><mn>0.623</mn><mo>|</mo></mrow></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mrow><mn>0.022</mn><mspace width="0.2em"></mspace><mtext>m</mtext></mrow><mo>=</mo><mrow><mn>2.2</mn><mspace width="0.2em"></mspace><mtext>cm</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Rearrange the motion equation</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><msub><mi>v</mi><mtext>f</mtext></msub><mn>2</mn></msup><mo>=</mo><msup><msub><mi>v</mi><mtext>impact</mtext></msub><mn>2</mn></msup><mo>+</mo><mn>2</mn><msub><mi>a</mi><mtext>impact</mtext></msub><msub><mi>d</mi><mtext>c</mtext></msub></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>a</mi><mtext>impact</mtext></msub><mo>=</mo><mo>−</mo><mfrac><mrow><msup><msub><mi>v</mi><mtext>impact</mtext></msub><mn>2</mn></msup></mrow><mrow><mrow><mn>2</mn><msub><mi>d</mi><mtext>c</mtext></msub></mrow></mrow></mfrac></mrow></math></div><div class="math-line"><span class="formula-label">Substitute the measured values</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>a</mi><mtext>impact</mtext></msub><mo>=</mo><mo>−</mo><mfrac><mrow><msup><mrow><mo>(</mo><mn>0.9313</mn><mo>)</mo></mrow><mn>2</mn></msup></mrow><mrow><mrow><mn>2</mn><mrow><mo>(</mo><mn>0.022</mn><mo>)</mo></mrow></mrow></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>≈</mo><mrow><mn>−19.7</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow><mo>≈</mo><mrow><mn>−20</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow></mrow></math></div><p class="calc-footnote">The negative acceleration indicates the cart is slowing down. Compression distances in Trials 2 and 3 were 2.8 cm and 2.3 cm.</p></div></article><article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">5</span><h3>Experimental impact force</h3><p>Apply Newton’s second law along the ramp. Gravity still acts down the slope, while friction and the barrier force act up the slope. The pre-impact forces can be combined using the measured descent acceleration.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Net force during collision</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>F</mi><mtext>net,x</mtext></msub><mo>=</mo><mi>mg</mi><mspace width="0.15em"></mspace><mi mathvariant="normal">sin</mi><mspace width="0.08em"></mspace><mi>θ</mi><mo>−</mo><msub><mi>F</mi><mtext>k</mtext></msub><mo>−</mo><msub><mi>F</mi><mtext>barrier</mtext></msub><mo>=</mo><msub><mi>m</mi><mtext>f</mtext></msub><msub><mi>a</mi><mtext>impact</mtext></msub></mrow></math></div><div class="math-line"><span class="formula-label">Rearrange for the barrier force</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>F</mi><mtext>barrier</mtext></msub><mo>=</mo><msub><mi>m</mi><mtext>f</mtext></msub><mrow><mo>(</mo><mrow><mi>a</mi><mo>−</mo><msub><mi>a</mi><mtext>impact</mtext></msub></mrow><mo>)</mo></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Trial 1 substitution</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>F</mi><mtext>barrier</mtext></msub><mo>=</mo><mn>0.5789</mn><mrow><mo>(</mo><mrow><mn>0.561</mn><mo>−</mo><mrow><mo>(</mo><mrow><mo>−</mo><mn>19.713</mn></mrow><mo>)</mo></mrow></mrow><mo>)</mo></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Result</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>F</mi><mtext>barrier</mtext></msub><mo>≈</mo><mrow><mn>11.7</mn><mspace width="0.2em"></mspace><mtext>N</mtext></mrow><mo>≈</mo><mrow><mn>12</mn><mspace width="0.2em"></mspace><mtext>N</mtext></mrow></mrow></math></div></div></article><article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">6</span><h3>Rigid-cart comparison</h3><p>For comparison, keep the same mass and impact speed as Trial 1, but assume the cart stops over only 0.01 cm (0.0001 m). Use the same equations for acceleration and barrier force.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Assumed rigid stopping distance</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>d</mi><mtext>rigid</mtext></msub><mo>=</mo><mrow><mn>0.01</mn><mspace width="0.2em"></mspace><mtext>cm</mtext></mrow><mo>=</mo><mrow><mn>0.0001</mn><mspace width="0.2em"></mspace><mtext>m</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Rigid stopping acceleration</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>a</mi><mtext>rigid</mtext></msub><mo>=</mo><mo>−</mo><mfrac><mrow><msup><msub><mi>v</mi><mtext>impact</mtext></msub><mn>2</mn></msup></mrow><mrow><mrow><mn>2</mn><msub><mi>d</mi><mtext>rigid</mtext></msub></mrow></mrow></mfrac></mrow></math></div><div class="math-line"><span class="formula-label">Substitute Trial 1 impact speed</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mo>−</mo><mfrac><mrow><msup><mrow><mo>(</mo><mn>0.9313</mn><mo>)</mo></mrow><mn>2</mn></msup></mrow><mrow><mrow><mn>2</mn><mrow><mo>(</mo><mn>0.0001</mn><mo>)</mo></mrow></mrow></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>≈</mo><mrow><mn>−4337</mn><mspace width="0.2em"></mspace><mtext>m/s²</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Rigid barrier force</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>F</mi><mtext>rigid</mtext></msub><mo>=</mo><msub><mi>m</mi><mtext>f</mtext></msub><mrow><mo>(</mo><mrow><mi>a</mi><mo>−</mo><msub><mi>a</mi><mtext>rigid</mtext></msub></mrow><mo>)</mo></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Result</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mn>0.5789</mn><mrow><mo>(</mo><mrow><mn>0.561</mn><mo>−</mo><mrow><mo>(</mo><mrow><mo>−</mo><mn>4336.8</mn></mrow><mo>)</mo></mrow></mrow><mo>)</mo></mrow></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>≈</mo><mrow><mn>2511</mn><mspace width="0.2em"></mspace><mtext>N</mtext></mrow></mrow></math></div><p class="calc-footnote">Because the stopping distance is shorter, the magnitude of the stopping acceleration is much larger.</p></div></article><article class="calc-step reveal"><div class="calc-step-copy"><span class="calc-index">7</span><h3>Percentage reduction in force</h3><p>Subtract the force with the crumple zone from the rigid-cart force. Divide by the rigid-cart force and multiply by 100%. Repeat for all three trials and average the reductions.</p></div><div class="calc-step-work"><div class="math-line"><span class="formula-label">Percentage reduction</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>R</mi><mo>=</mo><mfrac><mrow><mrow><msub><mi>F</mi><mtext>rigid</mtext></msub><mo>−</mo><msub><mi>F</mi><mtext>barrier</mtext></msub></mrow></mrow><mrow><msub><mi>F</mi><mtext>rigid</mtext></msub></mrow></mfrac><mo>×</mo><mn>100</mn><mo>%</mo></mrow></math></div><div class="math-line"><span class="formula-label">Trial 1 calculation</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>R</mi><mo>=</mo><mfrac><mrow><mrow><mn>2510.9</mn><mo>−</mo><mn>11.7</mn></mrow></mrow><mrow><mn>2510.9</mn></mrow></mfrac><mo>×</mo><mn>100</mn><mo>%</mo></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>=</mo><mrow><mn>99.5</mn><mspace width="0.2em"></mspace><mtext>%</mtext></mrow></mrow></math></div><div class="math-line"><span class="formula-label">Average of three trials</span><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover accent="true"><mi>R</mi><mo>¯</mo></mover><mo>=</mo><mfrac><mrow><mrow><mn>99.5</mn><mo>+</mo><mn>99.6</mn><mo>+</mo><mn>99.6</mn></mrow></mrow><mrow><mn>3</mn></mrow></mfrac></mrow></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>≈</mo><mrow><mn>99.6</mn><mspace width="0.2em"></mspace><mtext>%</mtext></mrow></mrow></math></div></div></article>
+<div class="calc-summary reveal" id="all-trial-calculations">
+<h3>Calculated values by trial</h3>
+<p>Negative impact acceleration indicates the cart is stopping.</p>
+<div class="calc-table-wrap"><table class="calc-table">
+<thead><tr><th scope="col">Trial</th><th scope="col">Descent acceleration</th><th scope="col">Impact velocity</th><th scope="col">Compression</th><th scope="col">Impact acceleration</th><th scope="col">Estimated stop time</th><th scope="col">Barrier force</th><th scope="col">Rigid force</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>0.561 m/s²</td><td>0.931 m/s</td><td>2.2 cm</td><td>−20 m/s²</td><td>0.047 s</td><td>12 N</td><td>2,500 N</td></tr>
+<tr><td>2</td><td>0.598 m/s²</td><td>0.963 m/s</td><td>2.8 cm</td><td>−17 m/s²</td><td>0.058 s</td><td>9.9 N</td><td>2,700 N</td></tr>
+<tr><td>3</td><td>0.673 m/s²</td><td>1.02 m/s</td><td>2.3 cm</td><td>−23 m/s²</td><td>0.045 s</td><td>14 N</td><td>3,000 N</td></tr>
+</tbody></table></div>
+</div>
+</div>
+</section><section aria-labelledby="effectiveness-title" class="effectiveness" id="why">
+<div class="wrap effectiveness-layout">
+<div class="effectiveness-title reveal">
+<span class="tag">Discussion</span>
+<h2 class="section-heading" id="effectiveness-title">Crumple zone and impact force</h2>
+</div>
+<div class="effectiveness-body reveal">
+<h3>Effectiveness of the crumple zone</h3>
+<p class="effectiveness-discussion">In the three trials, the front paper cylinder and pipe cleaners compressed 2.2–2.8 cm. This increased the cart’s stopping distance, reducing deceleration and impact force. The calculated barrier forces were 9.9–14 N, compared with 2,500–3,000 N for a rigid cart at the same impact speeds—an average reduction of 99.6%. Crumple zones are used in vehicles because longer stopping distances and times reduce the forces transmitted to passengers. The pom-poms cushioned the model passengers, while the elastic bands restrained them.</p>
+<div class="compliance-note">
+<h3>Design requirements</h3>
+<p>The cart travelled 77.3–77.7 cm before impact, exceeding the required 70 cm. Its front crumple zone compressed 2.2–2.8 cm during the collision.</p>
+</div>
+</div>
+</div>
+</section>
+<section aria-labelledby="setup-title" class="setup" id="setup"><div class="wrap setup-grid"><div class="reveal"><h2 class="section-heading" id="setup-title">Experimental setup</h2><p class="lede">The standard cart was used to estimate friction on the incline. The modified cart was then tested in three impact trials.</p></div><div class="setup-metrics reveal"><div class="setup-metric"><span>Ramp height</span><strong>10.65 cm</strong></div><div class="setup-metric"><span>Track length</span><strong>≈100 cm</strong></div><div class="setup-metric"><span>Ramp angle</span><strong>6.1°</strong></div><div class="setup-metric"><span>Friction coefficient</span><strong>0.0549</strong></div><div class="setup-metric"><span>Standard cart mass</span><strong>0.5085 kg</strong></div><div class="setup-metric"><span>Final cart mass</span><strong>0.5789 kg</strong></div></div></div></section>
+<section aria-labelledby="gallery-title" class="gallery" id="gallery"><div class="wrap"><div class="gallery-head reveal"><div><h2 class="section-heading" id="gallery-title">Photos and design sketch</h2></div><p class="gallery-copy">The finished cart and the labeled design sketch.</p></div><div class="gallery-grid"><figure class="gallery-figure reveal"><img alt="Completed experimental cart with colorful bumper, side rails, restraints and model passengers" loading="lazy" src="assets/finished-cart.webp"/><figcaption>Finished cart <span>Photograph</span></figcaption></figure><figure class="gallery-figure gallery-figure--sketch reveal"><img alt="Labeled hand-drawn design sketch explaining crumple-zone materials" loading="lazy" src="assets/labeled-sketch.webp"/><figcaption>Labeled design sketch <span>Drawing</span></figcaption></figure></div></div></section>
+</main>
+<footer class="footer"><div class="wrap footer-inner"><div class="footer-text"><strong>Dynamic Cart Lab / SPH4UE</strong>SPH4UE physics lab · Ivan K.<br/>Team: Tara, Raymond, Andrew &amp; Ivan.</div><div class="footer-links"><a href="#top">Back to top ↑</a></div></div></footer>
+<script>
+(() => {
+  const items=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}})},{threshold:.06,rootMargin:'0px 0px -25px 0px'});
+    items.forEach(item=>observer.observe(item));
+  } else { items.forEach(item=>item.classList.add('visible')); }
+})();
+</script>
+</body>
+</html>
